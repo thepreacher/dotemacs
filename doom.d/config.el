@@ -13,15 +13,15 @@
 ;; doom specific way of setting initial frame size
 (pushnew! initial-frame-alist
           '(top . 0)
-          '(left . 972)
-          '(width . 100)
+          '(left . 962)
+          '(width . 90)
           '(height . 60))
 
 ;; doom specific way of setting default frame size
 (pushnew! default-frame-alist
           '(top . 0)
-          '(left . 972)
-          '(width . 100)
+          '(left . 952)
+          '(width . 90)
           '(height . 60))
 
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
@@ -46,8 +46,8 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "SF Mono" :size 13 :weight 'light))
-(setq doom-big-font (font-spec :family "SF Mono" :size 15 :weight 'light))
+(setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light))
+(setq doom-big-font (font-spec :family "SF Mono" :size 16 :weight 'light))
 
 (when IS-MAC
   (setq ns-use-thin-smoothing t))
@@ -112,6 +112,16 @@
                                        "~/projects/"))
 
 
+;; Refresh projectle project list before switching projects
+;; This is so newly created projects will be listed for selection.
+
+;;(after! projectile (projectile-discover-projects-in-search-path)) ; This refreshes the project list only once.
+
+(defadvice! refresh-projects-before-switching (&rest _args) ; This refreshes the project list every you press `SPC p p`
+  :before #'counsel-projectile-switch-project
+  (projectile-discover-projects-in-search-path))
+
+
 ;;; Modules
 ;; I prefer search matching to be ordered; it's more precise
 (add-to-list 'ivy-re-builders-alist '(counsel-projectile-find-file . ivy--regex-plus))
@@ -171,7 +181,7 @@
 (custom-set-faces!
   `(markdown-code-face :background ,(doom-darken 'bg 0.075)))
 
-;; Define lsp server for lps-mode
+;; Define lsp server for lsp-mode
 (after! lsp-clients
   (lsp-register-client
    (make-lsp-client
@@ -196,13 +206,12 @@
   (setq lsp-ui-doc-max-height 13
         lsp-ui-doc-max-width 80
         lsp-ui-doc-header t
-        lsp-ui-doc-include-signature t
+        ;;lsp-ui-doc-include-signature t
         lsp-ui-doc-position 'top
         lsp-ui-imenu-kind-position 'left
-        lsp-ui-sideline-enable nil
-        lsp-ui-sideline-ignore-duplicate t
-        lsp-enable-symbol-highlighting nil
+        ;;lsp-ui-sideline-enable nil
         lsp-ui-sideline-code-actions-prefix "💡"
+	    company-lsp-cache-candidates nil
         ;; fix for completing candidates not showing after “Enum.”:
         company-lsp-match-candidate-predicate #'company-lsp-match-candidate-prefix))
 
@@ -210,34 +219,9 @@
 (if IS-GUI
   (setq lsp-ui-doc-use-webkit t))
 
-;; (require 'lsp-ui-flycheck)
-(use-package! lsp-ui-flycheck)
-(after! lsp-mode
-   (add-hook 'lsp-after-open-hook (lambda () (lsp-ui-flycheck-enable 1))))
 
-;; dap mode
-(use-package! dap-mode
-  :hook ((python-mode . (lambda () (require 'dap-python)))
-         (haskell-mode . (lambda () (require 'dap-haskell)))
-         (rust-mode . (lambda () (require 'dap-gdb-lldb)))
-         (ruby-mode . (lambda () (require 'dap-ruby)))
-         (go-mode . (lambda () (require 'dap-go)))
-         (java-mode . (lambda () (require 'dap-java)))
-         (php-mode . (lambda () (require 'dap-php)))
-         (elixir-mode . (lambda () (require 'dap-elixir)))
-         ((js-mode js2-mode typescript-mode) . (lambda () (require 'dap-firefox))))
-  :config
-  (dap-mode 1)
-  (dap-ui-mode 1)
-  (dap-tooltip-mode 1)
-  ;; use tooltips for mouse hover
-  ;; if it is not enabled `dap-mode' will use the minibuffer.
-  ;(tooltip-mode 1)
-  ;; displays floating panel with debug buttons
-  ;; requies emacs 26+
-  (dap-ui-controls-mode 1))
-
-(after! lsp-mode
+;; Elixir
+(after! lsp
   (defun dap-elixir--populate-start-file-args (conf)
     "Populate CONF with the required arguments."
     (-> conf
@@ -260,18 +244,17 @@
                                     :cwd nil
                                     :request "launch"
                                     :program nil
-                                    :name "Elixir::Run")))
+                                    :name "Elixir::Run"))
 
-
-;; Configure ExUnit package
-(use-package! exunit)
-
-;; Enable formatting on save and send reload command to Elixir’s REPL
-(after! lsp-mode
+  ;; Enable formatting on save and send reload command to Elixir’s REPL
   (add-hook 'elixir-mode-hook
             (lambda ()
               (add-hook 'before-save-hook 'lsp-format-buffer nil t)
               (add-hook 'after-save-hook 'alchemist-iex-reload-module))))
+
+
+;; Configure ExUnit package
+(use-package! exunit)
 
 ;; Disable popup quitting for Elixir’s REPL
 (set-popup-rule! "^\\*Alchemist-IEx" :quit nil :size 0.3)
@@ -286,20 +269,26 @@
     :desc "Run single test"   :nve  "cts"   #'exunit-verify-single)
 
 
-;; python
+;; Python
 (defalias 'workon 'pyvenv-workon)
 
-(after! lsp-mode
-  (use-package! lsp-python-ms
-    :init
-    ;; for dev build of language server
-    (setq lsp-python-ms-dir
-          (expand-file-name "~/lang_servers/python-language-server/output/bin/Release/"))
-    ;; for executable of language server, if it's not symlinked on your PATH
-    ;; https://github.com/emacs-lsp/lsp-python-ms
-    (setq lsp-python-ms-executable
-          (expand-file-name "~/lang_servers/python-language-server/output/bin/Release/osx-x64/publish/Microsoft.Python.LanguageServer"))))
+; (after! lsp-mode
+;   (use-package! lsp-python-ms
+;     :init
+;     ;; for dev build of language server
+;     (setq lsp-python-ms-dir
+;           (expand-file-name "~/lang_servers/python-language-server/output/bin/Release/"))
+;     ;; for executable of language server, if it's not symlinked on your PATH
+;     ;; https://github.com/emacs-lsp/lsp-python-ms
+;     (setq lsp-python-ms-executable
+;           (expand-file-name "~/lang_servers/python-language-server/output/bin/Release/osx-x64/publish/Microsoft.Python.LanguageServer"))))
 
+(after! lsp-python-ms
+  (set-lsp-priority! 'mspyls 1))
+
+;; Restart workspace after changing virtualenv
+;(add-hook 'pipenv-mode-hook 'lsp-workspace-restart)
+;(add-hook 'pyvenv-mode-hook 'lsp-workspace-restart)
 
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.[l]eex\\'" . web-mode))
@@ -308,9 +297,7 @@
 ;; zig-mode
 (use-package! zig-mode)
 
-;; treemacs
-(setq doom-themes-treemacs-theme "doom-dracula")
-;;(setq doom-themes-treemacs-theme "doom-colors")
+;; Variable Pitch Font
 (setq doom-variable-pitch-font (font-spec :family "SF Pro Display" :size 13 :weight 'normal))
 
 ;; change evil-escape key from ESC to jk

@@ -50,7 +50,5 @@
 (package! sql-indent)
 (package! org-fancy-priorities)
 (package! move-text)
-(package! posframe)
-(package! dap-mode)
 (package! exunit)
 (package! zig-mode)
