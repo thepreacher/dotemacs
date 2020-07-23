@@ -134,9 +134,9 @@
       org-roam-directory (concat org-directory "notes/")
       org-journal-encrypt-journal t
       org-journal-file-format "%d%m%Y.org"
-	  org-bullets-bullet-list '("◉" "⋆" "○" "‣")
       org-ellipsis " ▼ "
-      org-superstar-headline-bullets-list '("#"))
+      ;;org-superstar-headline-bullets-list '("#")
+	  )
 	  
 (add-hook 'org-mode-hook #'auto-fill-mode)
 
