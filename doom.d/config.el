@@ -127,6 +127,17 @@
 (add-to-list 'ivy-re-builders-alist '(counsel-projectile-find-file . ivy--regex-plus))
 
 ;; org
+(setq org-directory "~/Org/"
+	  ;; org-default-notes-file
+	  org-default-notes-file "~/Org/inbox.org"
+      org-archive-location (concat org-directory ".archive/%s::")
+      org-roam-directory (concat org-directory "notes/")
+      org-journal-encrypt-journal t
+      org-journal-file-format "%d%m%Y.org"
+	  org-bullets-bullet-list '("◉" "⋆" "○" "‣")
+      org-ellipsis " ▼ "
+      org-superstar-headline-bullets-list '("#"))
+	  
 (add-hook 'org-mode-hook #'auto-fill-mode)
 
 (defun +org*update-cookies ()
@@ -138,6 +149,9 @@
 
 (add-hook! 'org-mode-hook (company-mode -1))
 (add-hook! 'org-capture-mode-hook (company-mode -1))
+
+;; Turn off line numbers in org-mode
+(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
 
 
 ;; Switch to the new window after splitting
