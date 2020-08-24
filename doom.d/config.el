@@ -128,16 +128,16 @@
 
 ;; org
 (setq org-directory "~/Org/"
-	  ;; org-default-notes-file
-	  org-default-notes-file "~/Org/inbox.org"
+    ;; org-default-notes-file
+    org-default-notes-file "~/Org/inbox.org"
       org-archive-location (concat org-directory ".archive/%s::")
       org-roam-directory (concat org-directory "notes/")
       org-journal-encrypt-journal t
       org-journal-file-format "%d%m%Y.org"
-      org-ellipsis " ▼ "
+      org-ellipsis " ▼ ")
       ;;org-superstar-headline-bullets-list '("#")
-	  )
-	  
+
+
 (add-hook 'org-mode-hook #'auto-fill-mode)
 
 (defun +org*update-cookies ()
@@ -164,6 +164,9 @@
 (setq show-trailing-whitespace 't)
 
 (global-whitespace-mode 't)
+
+;; evil-undo behave like vim
+(setq evil-want-fine-undo t)
 
 (progn
  ;; Make whitespace-mode with very basic background coloring for whitespaces.
@@ -196,23 +199,26 @@
   `(markdown-code-face :background ,(doom-darken 'bg 0.075)))
 
 ;; Define lsp server for lsp-mode
-(after! lsp-clients
-  (lsp-register-client
-   (make-lsp-client
-     :new-connection
-                    (lsp-stdio-connection
-                        (expand-file-name
-                          "~/lang_servers/elixir-ls/release/language_server.sh"))
-     :major-modes '(elixir-mode)
-     :priority -1
-     :server-id 'elixir-ls
-     :initialized-fn (lambda (workspace)
-                       (with-lsp-workspace workspace
-                        (let ((config `(:elixirLS
-                                        (:mixEnv "dev"
-                                                :dialyzerEnabled
-                                                :json-false))))
-                             (lsp--set-configuration config)))))))
+(after! lsp-mode
+  ;; (lsp-register-client
+  ;;  (make-lsp-client
+  ;;    :new-connection
+  ;;                   (lsp-stdio-connection
+  ;;                       (expand-file-name
+  ;;                         "~/lang_servers/elixir-ls/release/language_server.sh"))
+  ;;    :major-modes '(elixir-mode)
+  ;;    :priority -1
+  ;;    :server-id 'elixir-ls
+  ;;    :initialized-fn (lambda (workspace)
+  ;;                      (with-lsp-workspace workspace
+  ;;                       (let ((config `(:elixirLS
+  ;;                                       (:mixEnv "dev"
+  ;;                                               :dialyzerEnabled
+  ;;                                               :json-false))))
+  ;;                            (lsp--set-configuration config)))))))
+
+  (lsp-register-custom-settings '(("elixirLS.mixEnv" "dev")))
+  (setq lsp-clients-elixir-server-executable "~/lang_servers/elixir-ls/release/language_server.sh"))
 
 
 ;; Configure lsp-ui - user interface of lsp-mode
@@ -225,7 +231,7 @@
         lsp-ui-imenu-kind-position 'left
         ;;lsp-ui-sideline-enable nil
         lsp-ui-sideline-code-actions-prefix "💡"
-	    company-lsp-cache-candidates nil
+      company-lsp-cache-candidates nil
         ;; fix for completing candidates not showing after “Enum.”:
         company-lsp-match-candidate-predicate #'company-lsp-match-candidate-prefix))
 
@@ -266,21 +272,14 @@
               (add-hook 'before-save-hook 'lsp-format-buffer nil t)
               (add-hook 'after-save-hook 'alchemist-iex-reload-module))))
 
+;; credo with the '--strict' argument
+(setq flycheck-elixir-credo-strict t)
 
 ;; Configure ExUnit package
 (use-package! exunit)
 
 ;; Disable popup quitting for Elixir’s REPL
 (set-popup-rule! "^\\*Alchemist-IEx" :quit nil :size 0.3)
-
-;; Setup additional key bindings
-(map! :mode elixir-mode
-    :leader
-    :desc "iMenu" :nve  "c/"    #'lsp-ui-imenu
-    :desc "Run all tests"   :nve  "ctt"   #'exunit-verify-all
-    :desc "Run all in umbrella"   :nve  "ctT"   #'exunit-verify-all-in-umbrella
-    :desc "Re-run tests"   :nve  "ctx"   #'exunit-rerun
-    :desc "Run single test"   :nve  "cts"   #'exunit-verify-single)
 
 
 ;; Python
