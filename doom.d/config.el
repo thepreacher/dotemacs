@@ -109,6 +109,7 @@
                                        "~/projects/learn/elm/"
                                        "~/projects/learn/rust/"
                                        "~/projects/learn/ai/"
+                                       "~/projects/learn/c++/"
                                        "~/projects/"))
 
 
@@ -239,9 +240,19 @@
 (if IS-GUI
   (setq lsp-ui-doc-use-webkit t))
 
+;; Rust
+(after! rustic
+  (setq! rustic-lsp-server 'rls))
+  
+;; Common Lisp
+(setq! inferior-lisp-program "sbcl")
+
+;; C-C++
+(after! lsp-clients
+  (set-lsp-priority! 'clangd 1))  ; ccls has priority 0
 
 ;; Elixir
-(after! lsp
+(after! lsp-mode
   (defun dap-elixir--populate-start-file-args (conf)
     "Populate CONF with the required arguments."
     (-> conf
