@@ -46,8 +46,8 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light))
-(setq doom-big-font (font-spec :family "SF Mono" :size 16 :weight 'light))
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15 :weight 'light))
+(setq doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 16 :weight 'light))
 
 (when IS-MAC
   (setq ns-use-thin-smoothing t))
@@ -243,7 +243,7 @@
 ;; Rust
 (after! rustic
   (setq! rustic-lsp-server 'rls))
-  
+
 ;; Common Lisp
 (setq! inferior-lisp-program "sbcl")
 
@@ -317,6 +317,9 @@
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.[l]eex\\'" . web-mode))
 
+;; Julia
+;(setq lsp-julia-package-dir nil) ;; Uncomment to use own LanguageServer.jl instead of the bundled one
+(setq lsp-julia-default-environment "~/.julia/environments/v1.0")
 
 ;; zig-mode
 (use-package! zig-mode)

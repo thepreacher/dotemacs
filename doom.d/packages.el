@@ -52,3 +52,4 @@
 (package! move-text)
 (package! exunit)
 (package! zig-mode)
+(package! lsp-julia :recipe (:host github :repo "non-jedi/lsp-julia"))
