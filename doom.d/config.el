@@ -110,6 +110,7 @@
                                        "~/projects/learn/rust/"
                                        "~/projects/learn/ai/"
                                        "~/projects/learn/c++/"
+                                       "~/projects/learn/js/"
                                        "~/projects/"))
 
 
