@@ -32,7 +32,6 @@
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 
-
 ;;; A simple visible bell which works in all terminal types
 (use-package mode-line-bell
   :defer t

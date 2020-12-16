@@ -13,7 +13,7 @@
   :mode ("\\.ex[s]\\'" . elixir-mode)
   :init
   ;; for executable of language server, if it's not symlinked on your PATH
-  (add-to-list 'exec-path (expand-file-name "~/code/github/lang_servers/elixir-ls/release/")) ;; Uncomment for lsp-mode
+  (add-to-list 'exec-path (expand-file-name "~/lang-servers/elixir-ls/release/")) ;; Uncomment for lsp-mode
   :hook ((elixir-mode . subword-mode)
          ;; Create a buffer-local hook to run elixir-format on save, only when we enable elixir-mode.
          (elixir-mode . (lambda ()

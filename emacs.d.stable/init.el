@@ -2,7 +2,7 @@
 ;;  Author: Napoleon Ahiable
 ;;; Commentary:
 ;;  This is my personal Emacs configuration
-;; Installation: brew install emacs-plus --HEAD --without-spacemacs-icon --with-jansson
+;; Installation: brew install emacs-plus --HEAD --with-xwidgets
 ;; Reference dot emacs.d
 ;;    https://github.com/ianpan870102/.personal-emacs.d
 ;;    https://github.com/purcell/emacs.d

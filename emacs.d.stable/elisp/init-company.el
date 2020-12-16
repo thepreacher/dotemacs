@@ -61,8 +61,8 @@ If failed try to complete the common part with `company-complete-common'"
   (add-to-list 'company-lsp-filter-candidates '(mspyls . t))
   (defun company-lsp--on-completion (response prefix)
     "Handle completion RESPONSE.
-PREFIX is a string of the prefix when the completion is requested.
-Return a list of strings as the completion candidates."
+    PREFIX is a string of the prefix when the completion is requested.
+    Return a list of strings as the completion candidates."
     (let* ((incomplete (and (hash-table-p response) (gethash "isIncomplete" response)))
            (items (cond ((hash-table-p response) (gethash "items" response))
                         ((sequencep response) response)))

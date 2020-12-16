@@ -100,7 +100,7 @@
   (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
   :config
   (blink-cursor-mode -1)
-  (when (member "OperatorMono NF" (font-family-list))
+  (when (member "JetBrainsMono " (font-family-list))
     (set-frame-font "OperatorMono NF-14:weight=regular" t t))
   (defun my/disable-scroll-bars (frame)
     (modify-frame-parameters frame

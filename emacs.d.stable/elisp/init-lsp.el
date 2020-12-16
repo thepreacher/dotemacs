@@ -17,7 +17,7 @@
   (setq-default lsp-restart 'auto-restart) ;; Otherwise will get the restart message on exit.
   (setq lsp-eslint-server-command
    '("node"
-     "/Users/nahiable/.vscode/extensions/dbaeumer.vscode-eslint-2.1.5/server/out/eslintServer.js"
+     "~/.vscode/extensions/dbaeumer.vscode-eslint-2.1.5/server/out/eslintServer.js"
      "--stdio")) ;; This is required for eslint to work
   :custom
   (lsp-auto-guess-root nil)
